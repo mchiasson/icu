@@ -1,0 +1,101 @@
+# This file generated automatically by:
+#   generate_sugar_files.py
+# see wiki for more info:
+#   https://github.com/ruslo/sugar/wiki/Collecting-sources
+
+if(DEFINED ICU_SOURCE_COMMON_UNICODE_SUGAR_CMAKE_)
+  return()
+else()
+  set(ICU_SOURCE_COMMON_UNICODE_SUGAR_CMAKE_ 1)
+endif()
+
+include(sugar_files)
+
+sugar_files(
+    ICU_UC_SOURCES
+    icuplug.h
+    stringpiece.h
+    chariter.h
+    std_string.h
+    normlzr.h
+    uvernum.h
+    udata.h
+    ucharstrie.h
+    ucnvsel.h
+    brkiter.h
+    stringtriebuilder.h
+    uscript.h
+    utrace.h
+    unifilt.h
+    docmain.h
+    ubrk.h
+    messagepattern.h
+    bytestream.h
+    ustring.h
+    uset.h
+    uidna.h
+    utf8.h
+    enumset.h
+    uclean.h
+    idna.h
+    ucat.h
+    unifunct.h
+    uchar.h
+    errorcode.h
+    utf32.h
+    utf_old.h
+    parsepos.h
+    utf16.h
+    umachine.h
+    ucnv_cb.h
+    uloc.h
+    uversion.h
+    utf.h
+    uenum.h
+    utypes.h
+    putil.h
+    uiter.h
+    dtintrv.h
+    bytestrie.h
+    usetiter.h
+    platform.h
+    ptypes.h
+    localpointer.h
+    caniter.h
+    urep.h
+    ucasemap.h
+    ubidi.h
+    appendable.h
+    ucnv_err.h
+    unimatch.h
+    ures.h
+    schriter.h
+    uconfig.h
+    ucharstriebuilder.h
+    uniset.h
+    strenum.h
+    rbbi.h
+    umisc.h
+    uchriter.h
+    locid.h
+    dbbi.h
+    usprep.h
+    listformatter.h
+    ushape.h
+    resbund.h
+    unorm2.h
+    uobject.h
+    bytestriebuilder.h
+    urename.h
+    parseerr.h
+    unorm.h
+    icudataver.h
+    ucnv.h
+    normalizer2.h
+    unistr.h
+    utext.h
+    ustringtrie.h
+    rep.h
+    ulistformatter.h
+    symtable.h
+)
