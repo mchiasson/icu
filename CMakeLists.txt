@@ -27,6 +27,8 @@ project(ICU)
 hunter_add_package(sugar)
 find_package(sugar CONFIG REQUIRED)
 
+set(ICU_VERSION_MAJOR 55)
+set(ICU_VERSION_MINOR 1)
 
 option(UCLN_NO_AUTO_CLEANUP "Determines wheter to enable auto cleanup of libraries." TRUE)
 option(U_DISABLE_RENAMING "Determines whether to disable renaming or not." FALSE)
@@ -81,41 +83,71 @@ list(APPEND U_CONFIG
 
 sugar_include("./source/stubdata") # ICU_STUBDATA_SOURCES
 add_library(icudata ${ICU_TYPE} ${ICU_STUBDATA_SOURCES})
-target_compile_definitions(icudata PUBLIC STUBDATA_BUILD ${U_CONFIG})
+target_compile_definitions(icudata
+    PRIVATE STUBDATA_BUILD
+    PUBLIC ${U_CONFIG})
 target_include_directories(icudata PRIVATE ${PROJECT_SOURCE_DIR}/source/common)
-install(FILES ${PROJECT_SOURCE_DIR}/source/stubdata/icudt55l.dat
-    DESTINATION share/icu/55.1 COMPONENT Runtime
-)
+set_target_properties(icudata PROPERTIES
+  VERSION ${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}
+  SOVERSION ${ICU_VERSION_MAJOR})
+install(FILES ${PROJECT_SOURCE_DIR}/source/stubdata/icudt${ICU_VERSION_MAJOR}l.dat
+    DESTINATION share/icu/${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR} COMPONENT Runtime)
 
 sugar_include("./source/common") # ICU_UC_SOURCES
 add_library(icuuc ${ICU_TYPE} ${ICU_UC_SOURCES})
-target_compile_definitions(icuuc PUBLIC U_ATTRIBUTE_DEPRECATED= U_COMMON_IMPLEMENTATION ${U_CONFIG})
-target_include_directories(icuuc PRIVATE ${PROJECT_SOURCE_DIR}/source/common ${PROJECT_SOURCE_DIR}/source/i18n)
+target_compile_definitions(icuuc
+    PRIVATE U_ATTRIBUTE_DEPRECATED= U_COMMON_IMPLEMENTATION
+    PUBLIC ${U_CONFIG})
+target_include_directories(icuuc PRIVATE
+    ${PROJECT_SOURCE_DIR}/source/common
+    ${PROJECT_SOURCE_DIR}/source/i18n)
 target_link_libraries(icuuc icudata)
+set_target_properties(icuuc PROPERTIES
+  VERSION ${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}
+  SOVERSION ${ICU_VERSION_MAJOR})
 extract_headers(ICU_UC_SOURCES unicode)
 install(FILES ${ICU_UC_SOURCES} DESTINATION include/unicode COMPONENT Development)
 
 sugar_include("./source/i18n") # ICU_I18N_SOURCES
 add_library(icui18n ${ICU_TYPE} ${ICU_I18N_SOURCES})
-target_compile_definitions(icui18n PUBLIC U_ATTRIBUTE_DEPRECATED= U_I18N_IMPLEMENTATION ${U_CONFIG})
-target_include_directories(icui18n PRIVATE ${PROJECT_SOURCE_DIR}/source/i18n ${PROJECT_SOURCE_DIR}/source/common)
+target_compile_definitions(icui18n
+    PRIVATE U_ATTRIBUTE_DEPRECATED= U_I18N_IMPLEMENTATION
+    PUBLIC ${U_CONFIG})
+target_include_directories(icui18n PRIVATE
+    ${PROJECT_SOURCE_DIR}/source/i18n
+    ${PROJECT_SOURCE_DIR}/source/common)
 target_link_libraries(icui18n PUBLIC icuuc)
+set_target_properties(icui18n PROPERTIES
+  VERSION ${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}
+  SOVERSION ${ICU_VERSION_MAJOR})
 extract_headers(ICU_I18N_SOURCES unicode)
 install(FILES ${ICU_I18N_SOURCES} DESTINATION include/unicode COMPONENT Development)
 
 sugar_include("./source/io") # ICU_IO_SOURCES
 add_library(icuio ${ICU_TYPE} ${ICU_IO_SOURCES})
-target_compile_definitions(icuio PUBLIC U_IO_IMPLEMENTATION ${U_CONFIG})
-target_include_directories(icuio PRIVATE ${PROJECT_SOURCE_DIR}/source/i18n ${PROJECT_SOURCE_DIR}/source/common)
+target_compile_definitions(icuio
+    PRIVATE U_IO_IMPLEMENTATION
+    PUBLIC ${U_CONFIG})
+target_include_directories(icuio PRIVATE
+    ${PROJECT_SOURCE_DIR}/source/i18n
+    ${PROJECT_SOURCE_DIR}/source/common)
 target_link_libraries(icuio PUBLIC icuuc icui18n)
+set_target_properties(icuio PROPERTIES
+  VERSION ${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}
+  SOVERSION ${ICU_VERSION_MAJOR})
 extract_headers(ICU_IO_SOURCES unicode)
 install(FILES ${ICU_IO_SOURCES} DESTINATION include/unicode COMPONENT Development)
 
 sugar_include("./source/layout") # ICU_LAYOUT_SOURCES
 add_library(icule ${ICU_TYPE} ${ICU_LAYOUT_SOURCES})
-target_compile_definitions(icule PUBLIC U_LAYOUT_IMPLEMENTATION ${U_CONFIG})
+target_compile_definitions(icule
+    PRIVATE U_LAYOUT_IMPLEMENTATION
+    PUBLIC ${U_CONFIG})
 target_include_directories(icule PRIVATE ${PROJECT_SOURCE_DIR}/source/common)
 target_link_libraries(icule PUBLIC icuuc)
+set_target_properties(icule PROPERTIES
+  VERSION ${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}
+  SOVERSION ${ICU_VERSION_MAJOR})
 install(FILES
     ${PROJECT_SOURCE_DIR}/source/layout/LayoutEngine.h
     ${PROJECT_SOURCE_DIR}/source/layout/LEFontInstance.h
@@ -132,9 +164,17 @@ install(FILES
 
 sugar_include("./source/layoutex") # ICU_LAYOUTEX_SOURCES
 add_library(iculx ${ICU_TYPE} ${ICU_LAYOUTEX_SOURCES})
-target_compile_definitions(iculx PUBLIC U_LAYOUTEX_IMPLEMENTATION ${U_CONFIG})
-target_include_directories(iculx PRIVATE ${PROJECT_SOURCE_DIR}/source ${PROJECT_SOURCE_DIR}/source/layoutex ${PROJECT_SOURCE_DIR}/source/common)
+target_compile_definitions(iculx
+    PRIVATE U_LAYOUTEX_IMPLEMENTATION
+    PUBLIC ${U_CONFIG})
+target_include_directories(iculx PRIVATE
+    ${PROJECT_SOURCE_DIR}/source
+    ${PROJECT_SOURCE_DIR}/source/layoutex
+    ${PROJECT_SOURCE_DIR}/source/common)
 target_link_libraries(iculx PUBLIC icuuc icule)
+set_target_properties(iculx PROPERTIES
+  VERSION ${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}
+  SOVERSION ${ICU_VERSION_MAJOR})
 extract_headers(ICU_LAYOUTEX_SOURCES layout)
 install(FILES ${ICU_LAYOUTEX_SOURCES} DESTINATION include/layout COMPONENT Development)
 
@@ -160,11 +200,11 @@ endif()
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/icuConfigVersion.cmake"
-  VERSION 55.1
+  VERSION ${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}
   COMPATIBILITY AnyNewerVersion
 )
 
-set(targets_export_name "ICUTargets")
+set(targets_export_name "icuTargets")
 
 # Create the Config file.
 include(CMakePackageConfigHelpers)
