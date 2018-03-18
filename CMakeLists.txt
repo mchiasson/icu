@@ -30,55 +30,16 @@ find_package(sugar CONFIG REQUIRED)
 set(ICU_VERSION_MAJOR 55)
 set(ICU_VERSION_MINOR 1)
 
-option(UCLN_NO_AUTO_CLEANUP "Determines wheter to enable auto cleanup of libraries." TRUE)
-option(U_DISABLE_RENAMING "Determines whether to disable renaming or not." FALSE)
-option(U_OVERRIDE_CXX_ALLOCATION "Determines whether to override new and delete." TRUE)
-option(U_ENABLE_TRACING "Determines whether to enable tracing." FALSE)
-option(U_ENABLE_DYLOAD "Whether to enable Dynamic loading in ICU." TRUE)
-option(U_CHECK_DYLOAD "Whether to test Dynamic loading as an OS capability." TRUE)
-option(U_DEFAULT_SHOW_DRAFT "Do we allow ICU users to use the draft APIs by default?" TRUE)
-option(UCONFIG_ONLY_COLLATION "This switch turns off modules that are not needed for collation." FALSE)
-option(UCONFIG_NO_FILE_IO "This switch turns off all file access in the common library where file access is only used for data loading." FALSE)
-option(UCONFIG_NO_CONVERSION "ICU will not completely build with this switch turned on." FALSE)
-option(UCONFIG_ONLY_HTML_CONVERSION "This switch turns off all of the converters NOT listed in the HTML encoding standard" FALSE)
-option(UCONFIG_NO_LEGACY_CONVERSION "This switch turns off all converters" FALSE)
-option(UCONFIG_NO_NORMALIZATION "This switch turns off normalization." FALSE)
-option(UCONFIG_NO_BREAK_ITERATION "This switch turns off break iteration." FALSE)
-option(UCONFIG_NO_IDNA "This switch turns off IDNA." FALSE)
-option(UCONFIG_NO_COLLATION "This switch turns off collation and collation-based string search." FALSE)
-option(UCONFIG_NO_FORMATTING "This switch turns off transliteration." FALSE)
-option(UCONFIG_NO_TRANSLITERATION "his switch turns off transliteration." FALSE)
-option(UCONFIG_NO_REGULAR_EXPRESSIONS "This switch turns off regular expressions." FALSE)
-option(UCONFIG_NO_SERVICE "This switch turns off service registration." FALSE)
-option(UCONFIG_HAVE_PARSEALLINPUT "This switch turns on the \"parse all input\" attribute. Binary incompatible." TRUE)
-option(UCONFIG_FORMAT_FASTPATHS_49 "This switch turns on other formatting fastpaths." TRUE)
-option(UCONFIG_NO_FILTERED_BREAK_ITERATION "This switch turns off filtered break iteration code." FALSE)
-
 list(APPEND U_CONFIG 
     U_DEBUG=$<CONFIG:Debug>
-    UCLN_NO_AUTO_CLEANUP=$<BOOL:${UCLN_NO_AUTO_CLEANUP}>
-    U_DISABLE_RENAMING=$<BOOL:${U_DISABLE_RENAMING}>
-    U_OVERRIDE_CXX_ALLOCATION=$<BOOL:${U_OVERRIDE_CXX_ALLOCATION}>
-    U_ENABLE_TRACING=$<BOOL:${U_ENABLE_TRACING}>
-    U_ENABLE_DYLOAD=$<BOOL:${U_ENABLE_DYLOAD}>
-    U_CHECK_DYLOAD=$<BOOL:${U_CHECK_DYLOAD}>
-    U_DEFAULT_SHOW_DRAFT=$<BOOL:${U_DEFAULT_SHOW_DRAFT}>
-    UCONFIG_ONLY_COLLATION=$<BOOL:${UCONFIG_ONLY_COLLATION}>
-    UCONFIG_NO_FILE_IO=$<BOOL:${UCONFIG_NO_FILE_IO}>
-    UCONFIG_NO_CONVERSION=$<BOOL:${UCONFIG_NO_CONVERSION}>
-    UCONFIG_ONLY_HTML_CONVERSION=$<BOOL:${UCONFIG_ONLY_HTML_CONVERSION}>
-    UCONFIG_NO_LEGACY_CONVERSION=$<BOOL:${UCONFIG_NO_LEGACY_CONVERSION}>
-    UCONFIG_NO_NORMALIZATION=$<BOOL:${UCONFIG_NO_NORMALIZATION}>
-    UCONFIG_NO_BREAK_ITERATION=$<BOOL:${UCONFIG_NO_BREAK_ITERATION}>
-    UCONFIG_NO_IDNA=$<BOOL:${UCONFIG_NO_IDNA}>
-    UCONFIG_NO_COLLATION=$<BOOL:${UCONFIG_NO_COLLATION}>
-    UCONFIG_NO_FORMATTING=$<BOOL:${UCONFIG_NO_FORMATTING}>
-    UCONFIG_NO_TRANSLITERATION=$<BOOL:${UCONFIG_NO_TRANSLITERATION}>
-    UCONFIG_NO_REGULAR_EXPRESSIONS=$<BOOL:${UCONFIG_NO_REGULAR_EXPRESSIONS}>
-    UCONFIG_NO_SERVICE=$<BOOL:${UCONFIG_NO_SERVICE}>
-    UCONFIG_HAVE_PARSEALLINPUT=$<BOOL:${UCONFIG_HAVE_PARSEALLINPUT}>
-    UCONFIG_FORMAT_FASTPATHS_49=$<BOOL:${UCONFIG_FORMAT_FASTPATHS_49}>
-    UCONFIG_NO_FILTERED_BREAK_ITERATION=$<BOOL:${UCONFIG_NO_FILTERED_BREAK_ITERATION}>
+
+    # These are recommende build options (see readme.html#RecBuild)
+    U_USING_ICU_NAMESPACE=0
+    U_CHARSET_IS_UTF8=1
+    UNISTR_FROM_CHAR_EXPLICIT=explicit
+    UNISTR_FROM_STRING_EXPLICIT=explicit
+    U_NO_DEFAULT_INCLUDE_UTF_HEADERS=1
+    U_DISABLE_RENAMING=1
 )
 
 sugar_include("./source/stubdata") # ICU_STUBDATA_SOURCES
@@ -97,7 +58,8 @@ sugar_include("./source/common") # ICU_UC_SOURCES
 add_library(icuuc ${ICU_TYPE} ${ICU_UC_SOURCES})
 target_compile_definitions(icuuc
     PRIVATE U_ATTRIBUTE_DEPRECATED= U_COMMON_IMPLEMENTATION
-    PUBLIC ${U_CONFIG})
+    PUBLIC ${U_CONFIG}
+    $<INSTALL_INTERFACE:U_HIDE_DRAFT_API=1 U_HIDE_INTERNAL_API=1 U_HIDE_SYSTEM_API=1>)
 target_include_directories(icuuc PRIVATE
     ${PROJECT_SOURCE_DIR}/source/common
     ${PROJECT_SOURCE_DIR}/source/i18n)
