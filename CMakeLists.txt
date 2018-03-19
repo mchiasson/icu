@@ -76,8 +76,7 @@ sugar_include("./source/common") # ICU_UC_SOURCES
 add_library(icuuc ${ICU_TYPE} ${ICU_UC_SOURCES})
 target_compile_definitions(icuuc
     PRIVATE U_ATTRIBUTE_DEPRECATED= U_COMMON_IMPLEMENTATION
-    PUBLIC ${U_CONFIG}
-    $<INSTALL_INTERFACE:U_HIDE_DRAFT_API=1 U_HIDE_INTERNAL_API=1 U_HIDE_SYSTEM_API=1>)
+    PUBLIC ${U_CONFIG})
 target_include_directories(icuuc PRIVATE
     ${PROJECT_SOURCE_DIR}/source/common
     ${PROJECT_SOURCE_DIR}/source/i18n)
