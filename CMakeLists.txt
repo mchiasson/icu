@@ -22,13 +22,12 @@ macro(extract_headers source_list header_dir)
     unset(_DIR_FOUND)
 endmacro()
 
-project(ICU)
+project(ICU VERSION 55.1)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 hunter_add_package(sugar)
 find_package(sugar CONFIG REQUIRED)
-
-set(ICU_VERSION_MAJOR 55)
-set(ICU_VERSION_MINOR 1)
 
 option(ICU_ENABLE_AUTO_CLEANUP "enable auto cleanup of libraries"       OFF)
 option(ICU_ENABLE_DRAFT        "enable draft APIs (and internal APIs)"  ON)
